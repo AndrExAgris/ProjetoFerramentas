@@ -1,0 +1,25 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+.kotlin/
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Local (caminho do SDK, chaves)
+local.properties
+*.jks
+*.keystore
+keystore.properties
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Claude Code: configurações locais
+.claude/settings.local.json

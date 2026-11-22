@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tema da janela (antes do Compose). O visual do app vem do OpenDesignTema. -->
+    <style name="Theme.Ferramentas" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/od_fundo</item>
+        <item name="android:windowSplashScreenBackground">@color/od_fundo</item>
+    </style>
+</resources>

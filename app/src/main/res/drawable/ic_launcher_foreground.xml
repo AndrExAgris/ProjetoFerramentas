@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ícone "tools" da Tabler Icons (MIT), traço 1,75 do Open Design, na zona segura do ícone adaptativo. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:scaleX="2.25"
+        android:scaleY="2.25"
+        android:translateX="27"
+        android:translateY="27">
+        <path
+            android:pathData="M3 21h4l13 -13a1.5 1.5 0 0 0 -4 -4l-13 13v4M14.5 5.5l4 4M12 8l-5 -5l-4 4l5 5M7 8l-1.5 1.5M16 12l5 5l-4 4l-5 -5M16 17l-1.5 1.5"
+            android:strokeWidth="1.75"
+            android:strokeColor="@color/od_laranja_sobre"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+    </group>
+</vector>
