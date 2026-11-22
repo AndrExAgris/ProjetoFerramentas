@@ -31,7 +31,11 @@ val licencasDeTerceiros = listOf(
     Licenca("Literata", "Fonte editorial. SIL Open Font License 1.1", "Literata-OFL.txt"),
     Licenca("JetBrains Mono", "Fonte de código e leituras. SIL Open Font License 1.1", "JetBrainsMono-OFL.txt"),
     Licenca("Tabler Icons 3.50.0", "Ícones. Licença MIT", "TablerIcons-MIT.txt"),
-    Licenca("Android Jetpack e Kotlin", "Compose, Navigation, DataStore, Lifecycle e Kotlin. Apache 2.0", "Apache-2.0.txt"),
+    Licenca("Android Jetpack e Kotlin", "Compose, Navigation, DataStore, Room, WorkManager, CameraX, Glance e Kotlin. Apache 2.0", "Apache-2.0.txt"),
+    Licenca("ZXing", "Leitura e geração de códigos. Apache 2.0", "Apache-2.0.txt"),
+    Licenca("Tesseract e Tesseract4Android", "Reconhecimento de texto (OCR). Apache 2.0", "Apache-2.0.txt"),
+    Licenca("Modelo tessdata_fast (português)", "Dados de treino do Tesseract. Apache 2.0", "Tessdata-Apache-2.0.txt"),
+    Licenca("dnsjava", "Consultas DNS. Licença BSD de 2 cláusulas", "dnsjava-BSD.txt"),
 )
 
 /** Lista das licenças: a do app e as de terceiros (fontes OFL, ícones MIT, bibliotecas Apache). */

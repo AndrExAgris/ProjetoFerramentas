@@ -5,4 +5,8 @@
         <item name="android:windowBackground">@color/od_fundo</item>
         <item name="android:windowSplashScreenBackground">@color/od_fundo</item>
     </style>
+    <!-- Atividade sem tela (gatilhos de NFC). -->
+    <style name="Theme.Ferramentas.Invisivel" parent="android:Theme.Translucent.NoTitleBar">
+        <item name="android:windowNoDisplay">true</item>
+    </style>
 </resources>

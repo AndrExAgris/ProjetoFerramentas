@@ -111,7 +111,7 @@ enum class ComoObter(val rotulo: String) {
 /** Permissões do README. Cada uma é pedida só quando a ferramenta que precisa dela abre, com explicação antes. */
 enum class Permissao(val nome: String, val como: ComoObter, val manifesto: List<String>) {
     UsoDoApp("Acesso ao uso", ComoObter.Configuracoes, listOf(Manifest.permission.PACKAGE_USAGE_STATS)),
-    Localizacao("Localização", ComoObter.Pedido, listOf(Manifest.permission.ACCESS_FINE_LOCATION)),
+    Localizacao("Localização", ComoObter.Pedido, listOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)),
     WifiProximo("Dispositivos Wi-Fi próximos", ComoObter.Pedido, listOf(Manifest.permission.NEARBY_WIFI_DEVICES)),
     Bluetooth("Dispositivos Bluetooth próximos", ComoObter.Pedido, listOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT)),
     Camera("Câmera", ComoObter.Pedido, listOf(Manifest.permission.CAMERA)),

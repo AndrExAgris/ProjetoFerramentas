@@ -75,7 +75,7 @@ object Catalogo {
             f("internet.dns", "Consulta DNS", null, "Diagnóstico", FtIcones.WorldSearch, OsDois, Facil, "dnsjava", internet = true)
             f("internet.whois", "Whois", null, "Diagnóstico", FtIcones.IdBadge, OsDois, Facil, "Socket na porta 43", internet = true)
             f("internet.ip-externo", "IP externo e provedor", null, "Diagnóstico", FtIcones.World, OsDois, Facil, "Base GeoIP offline ou API", "Preferir base offline", internet = true)
-            f("internet.velocidade", "Teste de velocidade", null, "Diagnóstico", FtIcones.BrandSpeedtest, OsDois, Media, "Servidores LibreSpeed", internet = true)
+            f("internet.velocidade", "Teste de velocidade", null, "Diagnóstico", FtIcones.BrandSpeedtest, OsDois, Media, "Servidores de teste da Cloudflare", internet = true)
             f("internet.wake-on-lan", "Wake-on-LAN", null, "Diagnóstico", FtIcones.Power, OsDois, Facil, "UDP broadcast")
             f("internet.servicos", "Descoberta de serviços", "Impressoras, TVs e outros aparelhos da rede", "Diagnóstico", FtIcones.Printer, OsDois, Media, "NsdManager, SSDP")
             f("internet.sub-rede", "Calculadora de sub-rede", null, "Diagnóstico", FtIcones.Calculator, OsDois, Facil, "Cálculo puro")
@@ -147,7 +147,7 @@ object Catalogo {
             f("medicao.inclinometro", "Inclinômetro pela câmera", null, "Inclinação", FtIcones.CameraRotate, OsDois, Facil, "Rotation vector + câmera",
                 requisitos = listOf(Req.Acelerometro, Req.Camera), permissoes = cam)
             f("medicao.altura", "Altura por trigonometria", null, "Distância e altura", FtIcones.BuildingSkyscraper, OsDois, Media, "Rotation vector",
-                "Precisa da distância ou da altura do aparelho", listOf(Req.Acelerometro))
+                "Precisa da distância até o objeto; mira pela câmera", listOf(Req.Acelerometro, Req.Camera), cam)
             f("medicao.distancia-camera", "Distância pela câmera", "Usando um objeto de tamanho conhecido", "Distância e altura", FtIcones.RulerMeasure2, OsDois, Media, "CameraX + campo de visão",
                 requisitos = listOf(Req.Camera), permissoes = cam)
             f("medicao.trena-ar", "Trena em realidade aumentada", null, "Distância e altura", FtIcones.AugmentedReality, Verificar, Dificil, "ARCore",

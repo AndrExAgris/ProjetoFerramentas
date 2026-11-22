@@ -62,3 +62,17 @@ class CatalogoTest {
         assertTrue(r.first().nome.contains("Wi-Fi") || normalizarBusca(r.first().nome).contains("wifi"))
     }
 }
+
+class RegistroTest {
+    @Test
+    fun todaFerramentaDoCatalogoTemTela() {
+        val semTela = Catalogo.ferramentas.map { it.id } - io.github.andrexagris.ferramentas.ui.ferramentas.RegistroTelas.ids
+        assertTrue("Sem tela: $semTela", semTela.isEmpty())
+    }
+
+    @Test
+    fun registroNaoTemIdForaDoCatalogo() {
+        val sobrando = io.github.andrexagris.ferramentas.ui.ferramentas.RegistroTelas.ids - Catalogo.ferramentas.map { it.id }.toSet()
+        assertTrue("Fora do catálogo: $sobrando", sobrando.isEmpty())
+    }
+}

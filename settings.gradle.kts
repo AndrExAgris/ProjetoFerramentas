@@ -14,6 +14,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        // Só para o Tesseract4Android (OCR), que não está no Maven Central.
+        maven("https://jitpack.io") { content { includeGroup("cz.adaptech.tesseract4android") } }
     }
 }
 

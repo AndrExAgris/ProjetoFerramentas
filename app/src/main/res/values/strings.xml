@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Ferramentas</string>
+    <string name="widget_bateria">Nível e estado da bateria</string>
+    <string name="widget_lanterna">Liga e desliga a lanterna</string>
 </resources>

@@ -1,0 +1,137 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "55fe5fcd268654a7ac6234b902b88bcb",
+    "entities": [
+      {
+        "tableName": "amostras",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `serie` TEXT NOT NULL, `tempo` INTEGER NOT NULL, `v1` REAL NOT NULL, `v2` REAL NOT NULL, `v3` REAL NOT NULL, `v4` REAL NOT NULL, `texto` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serie",
+            "columnName": "serie",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tempo",
+            "columnName": "tempo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "v1",
+            "columnName": "v1",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "v2",
+            "columnName": "v2",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "v3",
+            "columnName": "v3",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "v4",
+            "columnName": "v4",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "texto",
+            "columnName": "texto",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_amostras_serie_tempo",
+            "unique": false,
+            "columnNames": [
+              "serie",
+              "tempo"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_amostras_serie_tempo` ON `${TABLE_NAME}` (`serie`, `tempo`)"
+          }
+        ]
+      },
+      {
+        "tableName": "itens",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tipo` TEXT NOT NULL, `nome` TEXT NOT NULL, `dados` TEXT NOT NULL, `criado` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tipo",
+            "columnName": "tipo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nome",
+            "columnName": "nome",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dados",
+            "columnName": "dados",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "criado",
+            "columnName": "criado",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_itens_tipo",
+            "unique": false,
+            "columnNames": [
+              "tipo"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_itens_tipo` ON `${TABLE_NAME}` (`tipo`)"
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '55fe5fcd268654a7ac6234b902b88bcb')"
+    ]
+  }
+}

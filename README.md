@@ -4,7 +4,11 @@ App Android nativo que reúne mais de 120 ferramentas que usam os sensores, rád
 
 Feito em Kotlin com Jetpack Compose, com o visual do Open Design. Aparelhos-alvo: Galaxy S20 FE (Android 13) e Galaxy A24 (Android 15+). Ferramentas que pedem hardware que o aparelho não tem aparecem em cinza, com o motivo.
 
-**Situação:** esqueleto pronto (navegação, grupos, busca, favoritos, configurações e o catálogo das 128 ferramentas). As ferramentas em si ainda abrem uma tela "Em construção".
+## Instalar
+
+Pelo [Obtainium](https://github.com/ImranR98/Obtainium): adicione o endereço deste repositório e ele instala e atualiza a partir das [Releases](../../releases). Ou baixe o `ferramentas-vX.Y.Z.apk` da release mais recente e instale direto.
+
+**Situação:** versão 0.1 com a base de todas as 128 ferramentas; algumas ainda parciais (veja as notas da release).
 
 ## Compilar
 
@@ -13,6 +17,7 @@ Requisitos: JDK 17 ou mais novo (o Gradle baixa o 17 se faltar) e o Android SDK 
 ```bash
 ./gradlew assembleDebug          # APK em app/build/outputs/apk/debug/
 ./gradlew installDebug           # instala no celular conectado por USB (depuração USB ligada)
+git tag v0.2.0 && git push origin v0.2.0   # publica uma release assinada (veja CLAUDE.md)
 ./gradlew testDebugUnitTest      # testes
 ```
 
@@ -20,4 +25,4 @@ O módulo `opendesign/` é uma cópia do Open Design (veja `CLAUDE.md`). O brief
 
 ## Licença
 
-GPL-3.0 (arquivo `LICENSE`). Fontes Geist, Literata e JetBrains Mono sob SIL OFL 1.1 e ícones Tabler sob MIT; os textos ficam em `app/src/main/assets/licencas/` e na tela Mais > Sobre o app > Licenças.
+GPL-3.0 (arquivo `LICENSE`). Fontes Geist, Literata e JetBrains Mono sob SIL OFL 1.1, ícones Tabler sob MIT, ZXing, Tesseract e bibliotecas do Jetpack sob Apache 2.0, dnsjava sob BSD; os textos ficam em `app/src/main/assets/licencas/` e na tela Mais > Sobre o app > Licenças.

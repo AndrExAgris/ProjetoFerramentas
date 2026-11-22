@@ -60,7 +60,7 @@ private const val ROTA_LICENCAS = "mais/licencas"
 private fun rotaTextoLicenca(arquivo: String = "{arquivo}") = "mais/licencas/$arquivo"
 
 @Composable
-fun App(prefs: OdPreferencias, aoMudarPrefs: (OdPreferencias) -> Unit) {
+fun App(prefs: OdPreferencias, ferramentaPedida: String? = null, aoAbrirPedida: () -> Unit = {}, aoMudarPrefs: (OdPreferencias) -> Unit) {
     val nav = rememberNavController()
     val estado = rememberEstadoApp()
     val toasts = rememberOdToasts()
@@ -69,6 +69,12 @@ fun App(prefs: OdPreferencias, aoMudarPrefs: (OdPreferencias) -> Unit) {
 
     val barra: @Composable () -> Unit = {
         OdBarraInferior(Aba.entries.map { it.destino }, abaAtual.destino.id, { id -> nav.irParaAba(Aba.entries.first { it.destino.id == id }, abaAtual) })
+    }
+
+    LaunchedEffect(ferramentaPedida) {
+        val id = ferramentaPedida ?: return@LaunchedEffect
+        if (Catalogo.porId(id) != null) nav.navigate(rotaFerramenta(Aba.Inicio, id)) { popUpTo(Aba.Inicio.raiz) }
+        aoAbrirPedida()
     }
 
     val duracao = OdTema.duracao(OdMovimento.duracao)

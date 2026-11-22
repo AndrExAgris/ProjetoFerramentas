@@ -7,38 +7,65 @@ App Android nativo (Kotlin + Jetpack Compose) com 128 ferramentas que usam senso
 - **Aparelhos-alvo:** Galaxy S20 FE (Android 13, `minSdk` 33) e Galaxy A24 (Android 15+). Os dois têm que funcionar. APIs do Android 14+ atrás de checagem de versão.
 - **Ferramentas para aparelhos futuros** (barômetro, UWB, infravermelho, profundidade) entram no catálogo e aparecem em cinza com o motivo.
 - **Navegação:** uma Activity, Navigation Compose. Barra inferior com Início (grade dos 13 grupos), Favoritos, Buscar e Mais (Configurações: Aparência primeiro, depois as opções do app, Sobre no fim). Caminho: Início → grupo → lista por seção → ferramenta, com Voltar funcionando em cada passo.
-- **Dados:** DataStore para preferências, Room para históricos (quando a primeira ferramenta com histórico for feita), exportação em CSV.
+- **Dados:** DataStore para preferências, Room para históricos, exportação em CSV.
 - **Segundo plano:** foreground service para medições longas, WorkManager para tarefas periódicas (mínimo 15 min).
 - **Concorrência:** coroutines e Flow; cada sensor exposto como `Flow`.
 - **Rede:** sem análise de uso nem rastreadores. Internet só nas ferramentas que precisam (`usaInternet = true` no catálogo), e isso aparece na tela da ferramenta.
 - **Interface em português do Brasil. Licença GPL-3.0.**
-- **Em aberto:** quais ferramentas entram (coluna "Quero?" da planilha), distribuição (GitHub Releases, F-Droid ou Play Store).
+- **Distribuição:** APK assinado nas Releases do GitHub, instalado e atualizado pelo Obtainium (ver Releases).
+- **Em aberto:** quais ferramentas entram (coluna "Quero?" da planilha).
 
 ## Estrutura
 
 ```
 app/src/main/kotlin/io/github/andrexagris/ferramentas/
-  MainActivity.kt            enableEdgeToEdge + OpenDesignTema(prefs)
-  FerramentasApp.kt          Application: preferências e disponibilidade calculada uma vez
-  catalogo/Modelo.kt         Grupo (13, com seções), Ferramenta, Requisito, Req, Permissao
-  catalogo/Catalogo.kt       as 128 ferramentas, na ordem do briefing
-  catalogo/Disponibilidade.kt verifica hardware, sensores e versão do Android
-  dados/PreferenciasApp.kt   DataStore: favoritos e filtro "só o que funciona aqui"
-  ui/App.kt                  NavHost: um grafo por aba (cada aba guarda a própria pilha)
-  ui/Estado.kt               EstadoApp (favoritos, filtro, disponibilidade) e ícone de cada grupo
-  ui/FtIcones.kt             GERADO por ferramentas/gerar_icones.py; não edite à mão
-  ui/componentes/            componentes próprios (prefixo Ft)
-  ui/telas/                  Início, Grupo, Favoritos, Buscar, Ferramenta, Licenças
-opendesign/                  cópia do módulo Compose do Open Design
-ferramentas/gerar_icones.py  gera FtIcones.kt
+  MainActivity.kt              enableEdgeToEdge + OpenDesignTema; teclas físicas para as ferramentas
+  FerramentasApp.kt            canais de notificação, lanterna, agenda a tarefa periódica se preciso
+  catalogo/                    Modelo (Grupo, Ferramenta, Requisito, Permissao), Catalogo (128), Disponibilidade
+  base/                        infraestrutura comum das ferramentas:
+    Sensores.kt                  fluxoSensor/rememberSensor (sensores como Flow), Serie, MinMax, orientação
+    Permissoes.kt                PortaPermissoes (explica antes de pedir), rememberComPermissao (opcionais)
+    Audio.kt                     fluxoMicrofone, FFT, ponderação A, YIN (nota), SaidaAudio (geração), bipe
+    Camera.kt                    VistaCamera (CameraX: preview, análise, captura, Camera2 manual)
+    Nfc.kt                       LeitorNfc (modo leitor enquanto a tela está aberta), hex
+    Bateria.kt, Rede.kt, UsoDados.kt, Lanterna.kt, Codigos.kt (ZXing), Teclas.kt, Notificacoes.kt, Util.kt (CSV, compartilhar, formatos)
+  dados/Banco.kt               Room: Amostra (série temporal genérica) e ItemSalvo (listas salvas); sem migração para ferramenta nova
+  dados/PreferenciasApp.kt     DataStore: favoritos, filtro e ajustes por ferramenta (rememberAjusteFloat/Texto/Bool)
+  servicos/                    ServicoMedicao (standby, trajeto, log celular), ServicoVelocidade, ServicoVpnDns,
+                               TrabalhoPeriodico (WorkManager, 15 min), Blocos (painel rápido), AtividadeGatilho (NFC)
+  widgets/                     Glance: bateria e lanterna
+  ui/App.kt                    NavHost: um grafo por aba
+  ui/ferramentas/Registro.kt   id do catálogo → tela (TelaDeFerramenta); um mapa por grupo
+  ui/ferramentas/Kit.kt        FtColuna, FtPainel, FtInfos, FtCampo, FtBotaoMedir, FtDeslizante, FtGraficoHistorico, FtBarra, LocalToasts
+  ui/ferramentas/<grupo>/      as telas das ferramentas de cada grupo
+  ui/telas/                    Início, Grupo, Favoritos, Buscar, Ferramenta, Licenças
+app/src/main/assets/           licencas/ (textos exibidos no app), tessdata/por.traineddata (OCR)
+opendesign/                    cópia do módulo Compose do Open Design
+ferramentas/gerar_icones.py    gera ui/FtIcones.kt
+ferramentas/criar_chave.sh     cria a chave de assinatura e os segredos do GitHub (uma vez)
+docs/versoes/vX.Y.Z.md         notas de cada release
 ```
 
-## Como adicionar uma ferramenta
+## Como adicionar ou mudar uma ferramenta
 
-1. A entrada já existe em `Catalogo.kt` (id, grupo, seção, ícone, requisitos, permissões). Ajuste os requisitos se o teste no aparelho mostrar outra coisa.
-2. Crie a tela em `ui/ferramentas/<grupo>/` e troque o "Em construção" de `TelaFerramenta` por ela (um `when (ferramenta.id)`, ou um campo de tela no catálogo quando houver várias prontas).
-3. Declare as permissões no `AndroidManifest.xml` só quando a ferramenta for implementada. Peça na hora em que ela abre, com `OdEstadoRecurso(OdTipoEstado.Permissao, …)` explicando o porquê antes. Nada é pedido na abertura do app.
-4. Sensores como `Flow` (callbackFlow + awaitClose para desregistrar).
+1. Entrada em `Catalogo.kt` (id, grupo, seção, ícone, requisitos, permissões, `internet`). Os requisitos decidem o cinza; as permissões aparecem nos detalhes e formam a porta de permissões.
+2. Tela em `ui/ferramentas/<grupo>/<Grupo>.kt` e uma linha no mapa `telas<Grupo>()`: `"id" com { Tela() }`. A `TelaFerramenta` já põe barra superior, detalhes, favorito, toasts (`LocalToasts`) e a porta de permissões. Use `"id".com(lista) { … }` para escolher outra porta (ex.: `emptyList()` quando a permissão é opcional e a tela pede com `rememberComPermissao`).
+3. Permissão nova: declarar no `AndroidManifest.xml` e em `Permissao` (com `motivoPadrao`). Nada é pedido na abertura do app.
+4. Sensores como `Flow` (`fluxoSensor`); histórico em `Amostra` (série nova em `Series`); listas salvas em `ItemSalvo` (tipo novo em `Tipos`); tarefa com o app fechado em `TrabalhoPeriodico` (chave em `ChavesPeriodicas`); medição longa em `ServicoMedicao` (nova `TarefaMedicao`).
+5. Os testes conferem que toda ferramenta do catálogo tem tela e a contagem por grupo do briefing.
+
+## Teste
+
+- `./gradlew assembleDebug testDebugUnitTest lintDebug` (o mesmo do CI).
+- No build de debug, `adb shell am start -n io.github.andrexagris.ferramentas.debug/io.github.andrexagris.ferramentas.MainActivity --es ferramenta <id>` abre uma ferramenta direto. Dá para percorrer as 128 assim (conceda permissões com `pm grant` e `appops set`; use `</dev/null` nos `adb` dentro de laços).
+- Testado em emulador Android 13 e Android 15 (as 128 telas sem travar; serviços, VPN, áudio, OCR, exportação e teclas de volume exercitados).
+
+## Releases (Obtainium)
+
+- O Obtainium acompanha as Releases do GitHub. Para publicar: escreva `docs/versoes/vX.Y.Z.md`, commit, `git tag vX.Y.Z && git push origin vX.Y.Z`. O workflow `release.yml` testa, gera o APK assinado (`ferramentas-vX.Y.Z.apk`) e cria a release.
+- A versão vem da tag: `versionName` = X.Y.Z e `versionCode` = X·10000 + Y·100 + Z (sempre crescente). Localmente, sem tag, é 0.1.0.
+- A chave fica em `~/.android-chaves/` (fora do repositório) e nos segredos `FT_KEYSTORE_BASE64`, `FT_KEYSTORE_SENHA`, `FT_CHAVE_ALIAS`, `FT_CHAVE_SENHA`. Trocar a chave quebra as atualizações no celular.
+- Fluxo combinado: uma versão grande por vez; o André testa no celular e volta com um pedido de correções para a versão seguinte.
 
 ## Open Design
 
@@ -62,12 +89,13 @@ ferramentas/gerar_icones.py  gera FtIcones.kt
 ## Código
 
 - Nomes em português, como no Open Design (`aoClicar`, `aoVoltar`, `estado`). Composables de tela começam com `Tela`.
-- Versões das bibliotecas em `gradle/libs.versions.toml`. AGP 9.5 (Kotlin embutido, não aplique `org.jetbrains.kotlin.android`), Kotlin 2.4, Compose BOM 2026.11, `compileSdk` 37.2, `targetSdk` 37, JDK 17 (toolchain baixado pelo foojay se faltar).
+- Versões das bibliotecas em `gradle/libs.versions.toml`. AGP 9.5 (Kotlin embutido, não aplique `org.jetbrains.kotlin.android`), Kotlin 2.4, KSP 2.3 (Room), Compose BOM 2026.11, CameraX, WorkManager, Glance, ZXing, dnsjava, Tesseract4Android (JitPack), `compileSdk` 37.2, `targetSdk` 37, JDK 17.
+- Release sem R8 (dnsjava e Tesseract usam reflexão/JNI). APK de release só com arm64-v8a; o de debug também tem x86_64 (emulador).
+- APIs acima do Android 13 sempre atrás de `Build.VERSION.SDK_INT` (o lint acusa `NewApi`/`InlinedApi`). Ex.: o tipo `specialUse` de serviço só existe no 14+ (`TIPO_USO_ESPECIAL`).
+- Teste de velocidade usa os servidores da Cloudflare (o briefing citava LibreSpeed, que não tem lista pública estável). IP externo usa ipinfo.io.
 - `applicationId` provisório: `io.github.andrexagris.ferramentas` (o debug ganha `.debug`). Ainda em aberto no briefing.
 - Antes de commitar: `./gradlew assembleDebug testDebugUnitTest lintDebug` (o mesmo que o CI roda). Os testes do catálogo conferem a contagem por grupo do briefing.
 
-## Ordem de construção (do briefing)
+## Situação (v0.1.0)
 
-1. Primeiras ferramentas, que validam as APIs mais arriscadas: painel ao vivo da bateria, corrente e potência, teste de consumo em standby, uso de dados por app e lista de sensores.
-2. Testes de hardware: NFC no A24, MIFARE Classic, ciclos de carga, Wi-Fi RTT, dupla frequência e ARCore. O resultado atualiza `aparelhos` no catálogo.
-3. Grupo por grupo, na ordem das marcadas "Sim" na planilha.
+Todas as 128 ferramentas têm tela funcional. Parciais: trena AR (só confere o ARCore), scanner 3D e UWB (só aviso; nenhum dos aparelhos tem o hardware), infravermelho (sem base de códigos), scanner de documentos (sem correção de perspectiva), sonar (experimental). Próximo: correções a partir dos testes do André nos aparelhos e os testes de hardware do briefing (NFC no A24, MIFARE, ciclos, Wi-Fi RTT, dupla frequência, ARCore), que atualizam `aparelhos` no catálogo.
